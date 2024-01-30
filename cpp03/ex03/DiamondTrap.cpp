@@ -1,9 +1,11 @@
 #include "DiamondTrap.hpp"
 
-DiamondTrap::DiamondTrap(std::string name) : ClapTrap(name)
+DiamondTrap::DiamondTrap(std::string name)
 {
 	std::cout << "DiamondTrap constructor called\n";
-	energyPoints = 50;
+	hitPoints = FragTrap::hitPoints;
+	energyPoints = ScavTrap::energyPoints;
+	attackDamage = FragTrap::attackDamage;
 	this->name = name;
 	ClapTrap::name = name + "_clap_name";
 }
@@ -21,4 +23,5 @@ void DiamondTrap::whoAmI()
 		return;
 	}
 	std::cout << "I am " << name << ", " << ClapTrap::name << std::endl;
+	std::cout << "attributes: " << "HP: " << hitPoints << " EP: " << energyPoints << " AD: " <<attackDamage << "\n";
 }

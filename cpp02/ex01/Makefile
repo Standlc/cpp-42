@@ -4,7 +4,7 @@ SOURCES		=	main.cpp Fixed.cpp
 
 OBJECTS		= 	$(SOURCES:.cpp=.o)
 
-DEPENDECIES	=	Makefile
+DEPENDECIES	=	Makefile Fixed.hpp
 
 RM			=	rm -f
 
@@ -15,7 +15,7 @@ CFLAGS		=	-Wall -Wextra -Werror -std=c++98
 all : $(NAME)
 
 $(NAME) : $(OBJECTS)
-		$(CC) $(CFLAGS) $(OBJECTS) -o $(NAME)
+		$(CC) $(OBJECTS) -o $(NAME)
 
 %.o : %.cpp $(DEPENDECIES) $(HEADERS)
 		$(CC) $(CFLAGS) -c $< -o $@

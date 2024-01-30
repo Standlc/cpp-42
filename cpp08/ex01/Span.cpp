@@ -6,6 +6,17 @@ Span::Span() : _size(0) {}
 
 Span::Span(Span const &s) : _size(s._size), _arr(s._arr) {}
 
+Span::Span(std::vector<int>::iterator begin, std::vector<int>::iterator end) {
+    long long size = end - begin; 
+    if (size < 0) {
+        _size = 0;
+        throw lengthError();
+    }
+
+    _size = size;
+    _arr = std::vector<int>(begin, end);
+}
+
 Span::~Span() {}
 
 Span &Span::operator=(Span const &s) {

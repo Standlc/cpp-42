@@ -4,18 +4,20 @@ bool bsp(Point const a, Point const b, Point const c, Point const point);
 
 bool isPoint(Point const point, int x, int y)
 {
-	return x == std::roundf(point.getX().toFloat()) && y == std::roundf(point.getY().toFloat());
+	return x == roundf(point.getX().toFloat()) && y == roundf(point.getY().toFloat());
 }
 
 void printTriangle(Point const a, Point const b, Point const c, Point const point)
 {
-	for (int i = 15; i >= -1; i--)
+	for (int y = 10; y >= 0; y--)
 	{
-		for (int j = 0; j < 30; j++)
+		for (int x = 0; x <= 20; x++)
 		{
-			if (isPoint(point, j, i))
-				std::cout << "x";
-			else if (isPoint(a, j, i) || isPoint(b, j, i) || isPoint(c, j, i))
+			if (isPoint(point, x, y))
+				std::cout << "X";
+			else if (isPoint(a, x, y) || isPoint(b, x, y) || isPoint(c, x, y))
+				std::cout << "0";
+			else if (bsp(a, b, c, Point(x, y)) == true)
 				std::cout << "o";
 			else
 				std::cout << " ";
@@ -27,7 +29,10 @@ void printTriangle(Point const a, Point const b, Point const c, Point const poin
 int main(int argc, char **argv)
 {
 	if (argc != 3)
+	{
+		std::cerr << "./bsp <x> <y>" << std::endl;
 		return (1);
+	}
 
 	Point a(0, 0);
 	Point b(10, 10);

@@ -27,9 +27,9 @@ int main()
 	wrongAnimal->makeSound();
 	std::cout << "\n";
 	
-	const WrongAnimal *wrongCat = new WrongCat;
-	std::cout << wrongCat->getType() << std::endl;
-	wrongCat->makeSound();
+	const WrongCat wrongCat;
+	std::cout << wrongCat.getType() << std::endl;
+	wrongCat.makeSound();
 	std::cout << "\n";
 
 
@@ -37,9 +37,5 @@ int main()
 	delete dog;
 	delete cat;
 	delete wrongAnimal;
-	delete wrongCat;
-
-	// Animal a;
-	// Animal b(a);
 	return (0);
 }

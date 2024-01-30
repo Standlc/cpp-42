@@ -4,9 +4,7 @@ SOURCES		=	main.cpp Zombie.cpp newZombie.cpp randomChump.cpp
 
 OBJECTS		= 	$(SOURCES:.cpp=.o)
 
-DEPENDECIES	=	Makefile
-
-HEADERS		=	Zombie.hpp
+DEPENDENCIES =	Makefile Zombie.hpp
 
 RM			=	rm -f
 
@@ -16,17 +14,17 @@ CFLAGS		=	-Wall -Wextra -Werror -std=c++98
 
 all : $(NAME)
 
-$(NAME) : $(OBJECTS) $(HEADERS)
-		$(CC) $(CFLAGS) $(OBJECTS) -o $(NAME)
+$(NAME) : $(OBJECTS)
+		$(CC) $(OBJECTS) -o $(NAME)
 
-%.o : %.c $(DEPENDECIES) $(HEADERS)
+%.o: %.cpp $(DEPENDENCIES)
 		$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-		@$(RM) $(OBJECTS)
+		$(RM) $(OBJECTS)
 
 fclean:	clean
-		@$(RM) $(NAME)
+		$(RM) $(NAME)
 
 re : fclean all
 

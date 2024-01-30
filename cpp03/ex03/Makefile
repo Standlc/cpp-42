@@ -4,7 +4,7 @@ SOURCES		=	main.cpp ClapTrap.cpp FragTrap.cpp ScavTrap.cpp DiamondTrap.cpp
 
 OBJECTS		= 	$(SOURCES:.cpp=.o)
 
-DEPENDECIES	=	Makefile
+DEPENDENCIES	=	Makefile ClapTrap.hpp FragTrap.hpp ScavTrap.hpp DiamondTrap.hpp
 
 RM			=	rm -f
 
@@ -15,9 +15,9 @@ CFLAGS		=	-Wall -Wextra -Werror -std=c++98
 all : $(NAME)
 
 $(NAME) : $(OBJECTS)
-		$(CC) $(CFLAGS) $(OBJECTS) -o $(NAME)
+		$(CC) $(OBJECTS) -o $(NAME)
 
-%.o : %.cpp $(DEPENDECIES) $(HEADERS)
+%.o: %.cpp $(DEPENDENCIES)
 		cc $(CFLAGS) -c $< -o $@
 
 clean:

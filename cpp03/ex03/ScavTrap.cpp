@@ -23,6 +23,12 @@ ScavTrap::ScavTrap(ScavTrap &scavTrap)
 	*this = scavTrap;
 }
 
+ScavTrap &ScavTrap::operator=(ScavTrap &s)
+{
+	ClapTrap::operator=(s);
+	return *this;
+}
+
 ScavTrap::~ScavTrap()
 {
 	std::cout << "ScavTrap Destructor called\n";

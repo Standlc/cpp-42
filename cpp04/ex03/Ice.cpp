@@ -2,18 +2,15 @@
 
 Ice::Ice() : AMateria("ice")
 {
-	// std::cout << "Ice constructor called\n";
 }
 
 Ice::Ice(Ice const &a) : AMateria(a)
 {
-	// std::cout << "Ice copy constructor called\n";
 	*this = a;
 }
 
 Ice::~Ice()
 {
-	// std::cout << "Ice destructor called\n";
 }
 
 Ice &Ice::operator=(Ice const &a)

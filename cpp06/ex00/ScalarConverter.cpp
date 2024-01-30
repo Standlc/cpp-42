@@ -1,11 +1,10 @@
 #include "ScalarConverter.hpp"
 
-int ScalarConverter::_type;
-char ScalarConverter::_c;
-int ScalarConverter::_i;
-float ScalarConverter::_f;
-double ScalarConverter::_d;
-bool ScalarConverter::_isScientificNotation = false;
+char _c;
+int _i;
+float _f;
+double _d;
+bool _isScientificNotation = false;
 
 ScalarConverter::ScalarConverter() {}
 
@@ -19,7 +18,7 @@ ScalarConverter &ScalarConverter::operator=(const ScalarConverter &s)
 	return *this;
 }
 
-int ScalarConverter::checkScientificNotations(std::string str)
+int checkScientificNotations(std::string str)
 {
 	_isScientificNotation = true;
 
@@ -33,7 +32,7 @@ int ScalarConverter::checkScientificNotations(std::string str)
 	return 0;
 }
 
-int ScalarConverter::getType(std::string str)
+int getType(std::string str)
 {
 	int i = str[0] == '-' || str[0] == '+';
 
@@ -51,8 +50,12 @@ int ScalarConverter::getType(std::string str)
 	if (str[i] == '.')
 	{
 		i = str.find_first_not_of("1234567890", i + 1);
-		if (str[i] == 'f')
+		if (str[i] == 'f') {
+			if (str[i + 1] != '\0') {
+				throw std::invalid_argument("Synthax error in: '" + str + "'");
+			}
 			return FLOAT;
+		}
 		if (str[i] == '\0')
 			return DOUBLE;
 	}
@@ -62,7 +65,7 @@ int ScalarConverter::getType(std::string str)
 	throw std::invalid_argument("Synthax error in: '" + str + "'");
 }
 
-void ScalarConverter::showFloatingNumber(std::string type, double number, std::string end)
+void showFloatingNumber(std::string type, double number, std::string end)
 {
 	std::cout << type << ": ";
 
@@ -79,7 +82,7 @@ void ScalarConverter::showFloatingNumber(std::string type, double number, std::s
 	std::cout << end << "\n";
 }
 
-void ScalarConverter::showWholeNumber(std::string type, int number, long min, long max)
+void showWholeNumber(std::string type, int number, long min, long max)
 {
 	std::cout << type << ": ";
 
@@ -102,7 +105,7 @@ void ScalarConverter::showWholeNumber(std::string type, int number, long min, lo
 		std::cout << number << "\n";
 }
 
-void ScalarConverter::showConversions()
+void showConversions()
 {
 	showWholeNumber("char", _c, CHAR_MIN, CHAR_MAX);
 	showWholeNumber("int", _i, INT_MIN, INT_MAX);
@@ -112,8 +115,7 @@ void ScalarConverter::showConversions()
 
 void ScalarConverter::convert(std::string str)
 {
-	_isScientificNotation = false;
-	_type = getType(str);
+	int _type = getType(str);
 
 	switch (_type)
 	{
@@ -124,23 +126,31 @@ void ScalarConverter::convert(std::string str)
 		_d = static_cast<double>(_c);
 		break;
 	case INT:
-		_i = std::stoi(str);
+		_i = std::atoi(&str[0]);
 		_c = static_cast<char>(_i);
 		_f = static_cast<float>(_i);
 		_d = static_cast<double>(_i);
 		break;
 	case FLOAT:
-		_f = std::stof(str);
+		_f = std::strtof(&str[0], NULL);
 		_c = static_cast<char>(_f);
 		_i = static_cast<int>(_f);
 		_d = static_cast<double>(_f);
 		break;
 	default:
-		_d = std::stod(str);
+		_d = std::strtod(&str[0], NULL);
 		_c = static_cast<char>(_d);
 		_i = static_cast<int>(_d);
 		_f = static_cast<float>(_d);
 	}
+
+	if (_type == INT) {
+		double intAsDouble = std::strtod(&str[0], NULL);
+		if (intAsDouble > INT_MAX || intAsDouble < INT_MIN) {
+			throw std::invalid_argument("Integer overflows. Cannot convert input.");
+		}
+	}
+	showConversions();
 }
 
 // #include <map>
@@ -197,7 +207,7 @@ void ScalarConverter::convert(std::string str)
 // 	errorTests["fd2"] = 0;
 // 	errorTests["//"] = 0;
 // 	errorTests[""] = 0;
-// 	errorTests["23458765433"] = INT;
+// 	errorTests["2345876543"] = INT;
 // 	errorTests["??"] = 0;
 // 	errorTests[".0."] = 0;
 // 	errorTests["0.."] = 0;
@@ -215,10 +225,10 @@ void ScalarConverter::convert(std::string str)
 // 			// }
 // 			// else
 // 			// {
-// 			ScalarConverter::convert(i->first);
 // 			std::cout << "\033[1;32m";
 // 			std::cout << i->first << std::endl;
-// 			ScalarConverter::showConversions();
+// 			ScalarConverter::convert(i->first);
+// 			// ScalarConverter::showConversions();
 // 			// }
 // 		}
 // 		catch (const std::exception &e)
@@ -232,9 +242,9 @@ void ScalarConverter::convert(std::string str)
 // 	{
 // 		try
 // 		{
+// 			// std::cout << "\033[1;31m" << i->first << std::endl;
 // 			ScalarConverter::convert(i->first);
-// 			std::cout << "\033[1;31m" << i->first << std::endl;
-// 			ScalarConverter::showConversions();
+// 			// ScalarConverter::showConversions();
 // 			std::cout << std::endl;
 // 		}
 // 		catch (const std::exception &e)

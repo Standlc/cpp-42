@@ -8,7 +8,6 @@ FragTrap::FragTrap()
 	attackDamage = 30;
 }
 
-
 FragTrap::FragTrap(std::string name)
 {
 	std::cout << "FragTrap name constructor called\n";
@@ -18,10 +17,16 @@ FragTrap::FragTrap(std::string name)
 	this->name = name;
 }
 
-FragTrap::FragTrap(FragTrap &FragTrap)
+FragTrap::FragTrap(FragTrap &frag)
 {
 	std::cout << "FragTrap Copy constructor called\n";
-	*this = FragTrap;
+	*this = frag;
+}
+
+FragTrap &FragTrap::operator=(FragTrap &frag)
+{
+	ClapTrap::operator=(frag);
+	return *this;
 }
 
 FragTrap::~FragTrap()

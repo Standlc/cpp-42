@@ -4,27 +4,27 @@ SOURCES		=	main.cpp Fixed.cpp
 
 OBJECTS		= 	$(SOURCES:.cpp=.o)
 
-DEPENDECIES	=	Makefile
+DEPENDECIES	=	Makefile Fixed.hpp
 
 RM			=	rm -f
 
 CC			=	c++
 
-CFLAGS		=	-Wall -Wextra -std=c++98 # -Werror
+CFLAGS		=	-Wall -Wextra -std=c++98 -Werror
 
 all : $(NAME)
 
 $(NAME) : $(OBJECTS)
-		$(CC) $(CFLAGS) $(OBJECTS) -o $(NAME)
+		$(CC) $(OBJECTS) -o $(NAME)
 
-%.o : %.cpp $(DEPENDECIES) $(HEADERS)
+%.o: %.cpp $(DEPENDECIES)
 		cc $(CFLAGS) -c $< -o $@
 
 clean:
-		@$(RM) $(OBJECTS)
+		$(RM) $(OBJECTS)
 
 fclean:	clean
-		@$(RM) $(NAME)
+		$(RM) $(NAME)
 
 re : fclean all
 

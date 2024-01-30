@@ -3,23 +3,19 @@
 AMateria::AMateria(std::string const &type)
 {
 	_type = type;
-	// std::cout << "AMateria constructor called\n";
 }
 
 AMateria::AMateria()
 {
-	// std::cout << "AMateria default constructor called\n";
 }
 
 AMateria::AMateria(AMateria const &a)
 {
-	// std::cout << "AMateria copy constructor called\n";
 	*this = a;
 }
 
 AMateria::~AMateria()
 {
-	// std::cout << "AMateria destructor called\n";
 }
 
 AMateria &AMateria::operator=(AMateria const &a)
@@ -37,5 +33,6 @@ std::string const &AMateria::getType() const
 
 void AMateria::use(ICharacter &target)
 {
+	(void)target;
 	std::cout << "AMateria use\n";
 }

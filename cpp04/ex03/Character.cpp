@@ -2,7 +2,6 @@
 
 Character::Character(std::string const name)
 {
-	// std::cout << "Character constructor called\n";
 	_name = name;
 	for (int i = 0; i < 4; i++)
 	{
@@ -12,7 +11,6 @@ Character::Character(std::string const name)
 
 Character::Character(Character const &c)
 {
-	// std::cout << "Character copy constructor called\n";
 	for (int i = 0; i < 4; i++)
 	{
 		_items[i] = NULL;

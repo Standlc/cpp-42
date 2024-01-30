@@ -1,31 +1,42 @@
 #include "iter.hpp"
 
 template <typename T>
-void testFunction(T &element) {
-    std::cout << "element: " << element << "\n";
+void printElement(T &element) {
+    std::cout << element << " ";
 }
 
-void printElement(int &a) {
+void addToElement(int &a) {
     a += 1;
-    std::cout << a << '\n';
 }
 
-void mutateElement(std::string &str) {
+void addToString(std::string &str) {
     str += "?";
-    std::cout << "after: " << str << "\n";
 }
 
 int main() {
     int arr1[] = {0, 1, 2, 3, 4};
-    std::cout << "template function call: \n";
-    iter(arr1, 5, testFunction);
-
-    std::cout << "\n+= 1 \n";
+    std::cout << "\e[1;30mInt array\n\e[1;0m";
     iter(arr1, 5, printElement);
 
-    std::cout << "\n+= '?' \n";
+    std::cout << "\n\n\e[0;33m+= 1 \n\e[1;0m";
+    iter(arr1, 5, addToElement);
+    iter(arr1, 5, printElement);
+
     std::string arr2[] = {"hey", "my", "name", "is", "jeff"};
-    iter(arr2, 5, mutateElement);
+    std::cout << "\n\n\e[1;30mString array\n\e[1;0m";
+    iter(arr2, 5, printElement);
+
+    std::cout << "\e[0;33m\n\n+= '?' \n\e[1;0m";
+    iter(arr2, 5, addToString);
+    iter(arr2, 5, printElement);
+
+    std::string arrEmpyt[] = {};
+    std::cout << "\n\n\e[1;30mEmpty arr (expecting to see nothing)\n\e[1;0m";
+    iter(arrEmpyt, 0, printElement);
+
+    std::cout << "\e[0;33m\n\n+= 'stuff' (expecting no changes)\n\e[1;0m";
+    iter(arrEmpyt, 0, addToString);
+    iter(arrEmpyt, 0, printElement);
 
     return 0;
 }

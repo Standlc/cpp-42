@@ -4,6 +4,7 @@
 
 int main()
 {
+	// won't work because Animal class is abstract
 	// Animal animal;
 
 	std::string dogWords[5] = {"hey", "yo", "wow", "123", "456"};

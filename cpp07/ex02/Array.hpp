@@ -22,11 +22,16 @@ class Array {
 
     Array &operator=(const Array &other) {
         delete[] _arr;
+        _size = other.size();
+        _arr = new T[_size];
         for (unsigned int i = 0; i < other.size(); i++) {
+            _arr[i] = other[i];
         }
+        return *this;
     }
 
     Array(const Array &other) {
+        _arr = NULL;
         *this = other;
     }
 
@@ -34,24 +39,16 @@ class Array {
         delete[] _arr;
     }
 
+    T &operator[](unsigned int i) const {
+        if (i < 0 || i >= _size) {
+            throw std::invalid_argument("Invalid index for accessing array.");
+        }
+        return _arr[i];
+    }
+
     unsigned int size() const {
         return _size;
     }
 };
-
-// template <typename T>
-// class Array {
-//    private:
-//     unsigned int _size;
-//     T *_arr;
-
-//    public:
-//     Array();
-//     Array(unsigned int size);
-//     Array &operator=(const Array &other);
-//     Array(const Array &other);
-//     ~Array();
-//     unsigned int size() const;
-// };
 
 #endif

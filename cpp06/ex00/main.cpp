@@ -8,7 +8,6 @@ int main(int argc, char **argv)
 	try
 	{
 		ScalarConverter::convert(argv[1]);
-		ScalarConverter::showConversions();
 	}
 	catch (const std::exception &e)
 	{

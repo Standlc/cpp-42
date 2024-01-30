@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <numeric>
+#include <vector>
 
 class Span {
    private:
@@ -22,11 +23,18 @@ class Span {
         }
     };
 
+    class lengthError : public std::exception {
+        const char *what() const throw() {
+            return "Length from iterators is negative";
+        }
+    };
+
    public:
     Span(unsigned int n);
     Span();
     ~Span();
     Span(const Span &s);
+    Span(std::vector<int>::iterator begin, std::vector<int>::iterator end);
     Span &operator=(const Span &s);
 
     void addNumber(int number);

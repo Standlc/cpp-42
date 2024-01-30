@@ -28,6 +28,12 @@ ScavTrap::~ScavTrap()
 	std::cout << "ScavTrap Destructor called\n";
 }
 
+ScavTrap &ScavTrap::operator=(ScavTrap &s)
+{
+	ClapTrap::operator=(s);
+	return *this;
+}
+
 void ScavTrap::guardGate()
 {
 	if (!energyPoints || hitPoints <= 0)
@@ -35,7 +41,7 @@ void ScavTrap::guardGate()
 		std::cout << name << " is dead\n";
 		return;
 	}
-	std::cout << "ScavTrap is now in gate keeper mode\n";
+	std::cout << name << " ScavTrap is now in gate keeper mode\n";
 }
 
 void ScavTrap::attack(const std::string &target)

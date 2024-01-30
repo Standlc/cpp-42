@@ -1,6 +1,7 @@
 #include "A.hpp"
 #include "B.hpp"
 #include "C.hpp"
+#include <stdlib.h>
 
 void identify(Base *p)
 {
@@ -32,7 +33,7 @@ void identify(Base &p)
 
 	try
 	{
-		dynamic_cast<B &>(p);
+		(void)dynamic_cast<B &>(p);
 		std::cout << "Class B\n";
 		return;
 	}
@@ -42,7 +43,7 @@ void identify(Base &p)
 
 	try
 	{
-		dynamic_cast<C &>(p);
+		(void)dynamic_cast<C &>(p);
 		std::cout << "Class C\n";
 	}
 	catch (const std::exception &e)

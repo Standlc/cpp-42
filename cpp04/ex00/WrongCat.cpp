@@ -1,6 +1,6 @@
 #include "WrongCat.hpp"
 
-WrongCat::WrongCat() : WrongAnimal("cat")
+WrongCat::WrongCat() : WrongAnimal("Wrong Cat")
 {
 	std::cout << "WrongCat constructor called\n";
 }
@@ -25,5 +25,5 @@ WrongCat &WrongCat::operator=(WrongCat const &cat)
 
 void WrongCat::makeSound() const
 {
-	std::cout << "meow meow\n";
+	std::cout << "meow meow from wrong cat\n";
 }

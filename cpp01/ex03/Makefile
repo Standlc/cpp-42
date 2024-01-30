@@ -4,7 +4,7 @@ SOURCES		=	main.cpp Weapon.cpp HumanA.cpp HumanB.cpp
 
 OBJECTS		= 	$(SOURCES:.cpp=.o)
 
-DEPENDECIES	=	Makefile
+DEPENDENCIES	=	Makefile Weapon.hpp HumanA.hpp HumanB.hpp
 
 RM			=	rm -f
 
@@ -16,6 +16,9 @@ all : $(NAME)
 
 $(NAME) : $(OBJECTS)
 		$(CC) $(CFLAGS) $(OBJECTS) -o $(NAME)
+
+%.o: %.cpp $(DEPENDENCIES)
+		$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 		@$(RM) $(OBJECTS)

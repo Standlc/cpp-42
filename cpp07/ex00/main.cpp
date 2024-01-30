@@ -6,15 +6,15 @@ void testSwap() {
     std::string str1 = "hello";
     std::string str2 = "world";
 
-    std::cout << "SWAP\n";
-    std::cout << "swap(" << intA << ", " << intB << ")\n";
+    std::cout << "\e[0;33mSWAP\n\e[1;0m";
+    std::cout << "\e[0;34mswap(" << intA << ", " << intB << ")\n\e[1;0m";
     swap(intA, intB);
     std::cout << "intA: " << intA << "\n";
     std::cout << "intB: " << intB << "\n";
 
     std::cout << "\n";
 
-    std::cout << "swap(" << str1 << ", " << str2 << ")\n";
+    std::cout << "\e[0;34mswap(" << str1 << ", " << str2 << ")\n\e[1;0m";
     swap(str1, str2);
     std::cout << "str1: " << str1 << "\n";
     std::cout << "str2: " << str2 << "\n";
@@ -26,24 +26,24 @@ void testMinMax() {
     int intA = 5;
     int intB = 10;
 
-    std::cout << "MIN\n";
-    std::cout << "min(5, 10) => " << min(intA, intB) << '\n';
-    std::cout << "min(10, 5) => " << min(intB, intA) << '\n';
+    std::cout << "\e[0;33mMIN\n\e[1;0m";
+    std::cout << "\e[0;34mmin(5, 10) => \e[1;0m" << min(intA, intB) << '\n';
+    std::cout << "\e[0;34mmin(10, 5) => \e[1;0m" << min(intB, intA) << '\n';
 
     std::cout << "\n";
 
-    std::cout << "MAX\n";
+    std::cout << "\e[0;33mMAX\n\e[1;0m";
     intA = 5;
     intB = 10;
-    std::cout << "max(5, 10) => " << max(intA, intB) << '\n';
-    std::cout << "max(10, 5) => " << max(intB, intA) << '\n';
+    std::cout << "\e[0;34mmax(5, 10) => \e[1;0m" << max(intA, intB) << '\n';
+    std::cout << "\e[0;34mmax(10, 5) => \e[1;0m" << max(intB, intA) << '\n';
 
     std::cout << "\n";
 }
 
 int main() {
     {
-        std::cout << "Custom Tests:\n";
+        std::cout << "\e[0;33mCustom Tests:\n\e[1;0m";
         testSwap();
         testMinMax();
     }

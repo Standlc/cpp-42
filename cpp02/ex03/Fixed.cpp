@@ -17,7 +17,7 @@ Fixed::Fixed(const int nb)
 
 Fixed::Fixed(const float nbFloat)
 {
-	rawBits = std::roundf(nbFloat * (1 << fractionalBits));
+	rawBits = roundf(nbFloat * (1 << fractionalBits));
 }
 
 Fixed::~Fixed()

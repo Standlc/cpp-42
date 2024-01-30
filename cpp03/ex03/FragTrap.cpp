@@ -23,6 +23,12 @@ FragTrap::FragTrap(FragTrap &FragTrap)
 	*this = FragTrap;
 }
 
+FragTrap &FragTrap::operator=(FragTrap &frag)
+{
+	ClapTrap::operator=(frag);
+	return *this;
+}
+
 FragTrap::~FragTrap()
 {
 	std::cout << "FragTrap Destructor called\n";

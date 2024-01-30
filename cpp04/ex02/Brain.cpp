@@ -27,5 +27,7 @@ Brain &Brain::operator=(Brain const &brain)
 
 std::string &Brain::getIdea(int index)
 {
+	if (index >= 100)
+		index = 0;
 	return _ideas[index];
 }
