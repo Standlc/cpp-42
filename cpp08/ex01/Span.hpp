@@ -5,6 +5,7 @@
 #include <iostream>
 #include <numeric>
 #include <vector>
+#include <climits>
 
 class Span {
    private:
@@ -30,17 +31,18 @@ class Span {
     };
 
    public:
-    Span(unsigned int n);
     Span();
-    ~Span();
+    Span(unsigned int n);
     Span(const Span &s);
-    Span(std::vector<int>::iterator begin, std::vector<int>::iterator end);
     Span &operator=(const Span &s);
+    ~Span();
 
+    void insert(std::vector<int>::iterator begin, std::vector<int>::iterator end);
     void addNumber(int number);
     int shortestSpan();
     int longestSpan();
     int size();
+    std::vector<int> data();
 };
 
 #endif

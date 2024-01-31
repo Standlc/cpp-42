@@ -70,18 +70,34 @@ int main() {
         for (size_t i = 0; i < size; i++) {
             someVector.push_back(i);
         }
-        Span spanFromIterators(someVector.begin(), someVector.end());
-        std::cout << "\n\e[1;33mCreating Span from iterator range, size " << spanFromIterators.size() << " \e[1;30m(expecting min 1, max 9)\n";
-        std::cout << "\e[1;0mmin span: \e[1;36m" << spanFromIterators.shortestSpan() << "\n";
-        std::cout << "\e[1;0mmax span: \e[1;36m" << spanFromIterators.longestSpan() << "\n";
 
-        try
-        {
-            std::cout << "\n\e[1;33mCreating Span from invalid iterator range \e[1;30m(expecting to catch error): ";
-            Span spanFromIteratorsError(someVector.end(), someVector.begin());
+        Span spanFromIterators;
+        spanFromIterators.insert(someVector.begin(), someVector.end());
+        try {
+            std::cout << "\n\e[1;33mCreating Span from iterator range, size " << spanFromIterators.size() << " \e[1;30m(expecting min 1, max 9)\n";
+            std::vector<int> spanData = spanFromIterators.data();
+            std::cout << "original: ";
+            for (unsigned int i = 0; i < size; i++) {
+                std::cout << someVector[i] << " ";
+            }
+            std::cout << "\nresult: ";
+            for (unsigned int i = 0; i < size; i++) {
+                std::cout << spanData[i] << " ";
+            }
+            std::cout << "\n\e[1;0mmin span: \e[1;36m" << spanFromIterators.shortestSpan() << "\n";
+            std::cout << "\e[1;0mmax span: \e[1;36m" << spanFromIterators.longestSpan() << "\n";
         }
-        catch(const std::exception& e)
-        {
+        catch(const std::exception& e) {
+            std::cerr << e.what() << '\n';
+        }
+        
+        Span other = spanFromIterators;
+        try {
+            std::cout << "\n\e[1;33mCreating Span from invalid iterator range \e[1;30m(expecting to catch error): ";
+            Span spanFromIteratorsError;
+            spanFromIteratorsError.insert(someVector.end(), someVector.begin());
+        }
+        catch(const std::exception& e) {
             std::cerr << "\e[1;32m" << e.what() << '\n';
         }
     }

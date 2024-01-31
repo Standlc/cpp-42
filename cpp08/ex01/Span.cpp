@@ -4,25 +4,35 @@ Span::Span(unsigned int size) : _size(size) {}
 
 Span::Span() : _size(0) {}
 
-Span::Span(Span const &s) : _size(s._size), _arr(s._arr) {}
-
-Span::Span(std::vector<int>::iterator begin, std::vector<int>::iterator end) {
-    long long size = end - begin; 
-    if (size < 0) {
-        _size = 0;
-        throw lengthError();
-    }
-
-    _size = size;
-    _arr = std::vector<int>(begin, end);
+Span::Span(Span const &s) {
+    *this = s;
 }
 
 Span::~Span() {}
 
 Span &Span::operator=(Span const &s) {
+    if (&s == this) {
+        return *this;
+    }
     _arr = s._arr;
     _size = s._size;
     return *this;
+}
+
+void Span::insert(std::vector<int>::iterator begin, std::vector<int>::iterator end) {
+    long long size = end - begin; 
+    if (size < 0 || size > UINT_MAX) {
+        _size = 0;
+        throw lengthError();
+    }
+
+    _size = size;
+    unsigned int i = 0;
+    while (begin != end && i < _size) {
+        _arr.insert(_arr.begin() + i, *begin);
+        begin++;
+        i++;
+    }
 }
 
 void Span::addNumber(int number) {
@@ -64,4 +74,8 @@ int Span::longestSpan() {
 
 int Span::size() {
     return _size;
+}
+
+std::vector<int> Span::data() {
+    return _arr;
 }

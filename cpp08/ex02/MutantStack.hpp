@@ -8,7 +8,6 @@
 template <typename T, typename sequence = std::deque<T> >
 class MutantStack : public std::stack<T, sequence>
 {
-private:
 public:
     MutantStack() {}
     MutantStack(const MutantStack &other) {
