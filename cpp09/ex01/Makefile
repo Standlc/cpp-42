@@ -1,10 +1,10 @@
-NAME = btc
+NAME = RPN
 
-SRC = main.cpp BitcoinExchange.cpp
+SRC = main.cpp RNP.cpp
 
 OBJ = ${SRC:.cpp=.o}
 
-DEPENDENCIES = Makefile BitcoinExchange.hpp
+DEPENDENCIES = Makefile RNP.hpp
 
 RM = rm -rf
 
