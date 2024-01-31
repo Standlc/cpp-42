@@ -2,13 +2,13 @@ NAME = btc
 
 SRC = main.cpp BitcoinExchange.cpp
 
-OBJ = ${SRC:.cpp:.o}
+OBJ = ${SRC:.cpp=.o}
 
 DEPENDENCIES = Makefile BitcoinExchange.hpp
 
 RM = rm -rf
 
-FLAGS = -Wall -Werror -Wextra -std=c++98
+# FLAGS = -Wall -Werror -Wextra -std=c++98
 
 all: ${NAME}
 

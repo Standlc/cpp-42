@@ -5,13 +5,23 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <sstream>
+#include <cstdlib>
+#include <climits>
+#include <cmath>
+#include <cfloat>
+#include <iomanip>
+
+typedef struct ExchangeToRetrieve
+{
+    std::string date;
+    float amount;
+} ExchangeToRetrieve;
 
 class BitcoinExchange
 {
 private:
-    std::string _inputFileContent;
     std::map<std::string, float> _exchangeRatesPerYear;
-    std::map<std::string, float> _year;
 
 public:
     BitcoinExchange();
@@ -19,32 +29,13 @@ public:
     BitcoinExchange &operator=(const BitcoinExchange &other);
     ~BitcoinExchange();
 
-    class FileCannotOpenException : public std::exception
-    {
-        const char *what() const throw()
-        {
-            return "Input file could not be opened";
-        }
-    };
-
-    void parseInputFile(std::string fileName)
-    {
-        std::ifstream file(fileName);
-        if (!file)
-        {
-            throw FileCannotOpenException();
-        }
-
-        try
-        {
-            getline(file, _inputFileContent, '\0');
-        }
-        catch (const std::exception &e)
-        {
-            throw;
-        }
-        // std::cout << data
-    }
+    void verifyDateComponentOrThrow(std::string &dateComponent, std::string &maxValue);
+    float toFloatOrThrow(std::string &strFloat, float max = -1);
+    void verifyDateOrThrow(std::string &date);
+    void parseDatabase(std::string filename);
+    ExchangeToRetrieve parseInputFileLineOrThrow(std::string &line);
+    void printRetrievedValue(std::string &line);
+    void printValuesPerYear(std::string filename);
 };
 
 #endif

@@ -1,19 +1,35 @@
 #include <map>
 #include <iostream>
+#include "BitcoinExchange.hpp"
 
-int main() {
-    std::map<int, int> map;
-
-    map[3] = 3;
-    map[2] = 2;
-    map[1] = 1;
-    map[4] = 3;
-    map[0] = 1;
-
-    std::map<int, int>::iterator it = map.begin();
-    std::map<int, int>::iterator end = map.end();
-    while (it != end) {
-        std::cout << it->first << " " << it->second << "\n";
-        it++;
+int main(int argc, char **argv)
+{
+    if (argc != 2)
+    {
+        std::cerr << "\e[0;31mError: an input file is required\n";
+        return 1;
     }
+
+    BitcoinExchange bitcoinDB;
+
+    try
+    {
+        bitcoinDB.parseDatabase("data.csv");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "\e[0;31mDB Error: " << e.what() << "\e[1;0m\n";
+        return 1;
+    }
+
+    try
+    {
+        bitcoinDB.printValuesPerYear(argv[1]);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "\e[0;31mError: " << e.what() << "\e[1;0m\n";
+    }
+
+    return 0;
 }
