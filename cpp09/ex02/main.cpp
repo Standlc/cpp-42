@@ -1,218 +1,165 @@
-#include <iostream>
-#include <vector>
+#include <climits>
 #include <cstdlib>
+#include <iostream>
+#include <list>
+#include <vector>
 
 using std::cout;
+using std::list;
+using std::pair;
+using std::vector;
 
-typedef std::vector<std::vector<int>> Pairs;
-typedef std::vector<int> VectorInt;
+#include <iterator>
+template <typename Iterator>
+Iterator advance(Iterator it, int amount) {
+    if (amount > 0) {
+        for (int i = 0; i < amount; i++) {
+            it++;
+        }
+    } else {
+        for (int i = 0; i > amount; i--) {
+            it--;
+        }
+    }
+    return it;
+}
 
-// template <typename T>
-// class GroupedIterator
-// {
-// private:
-//     typename std::vector<T>::iterator current;
+template <typename T>
+bool isSorted(T &vec, int pairSize) {
+    for (typename T::iterator it = vec.begin(); it + pairSize < vec.end(); it = advance(it, pairSize)) {
+        if (*it > *(it + pairSize)) {
+            cout << "\e[0;31m";
+            return false;
+        }
+    }
+    cout << "\e[1;0m";
+    return true;
+}
 
-// public:
-//     GroupedIterator(typename std::vector<T>::iterator it) : current(it) {}
-
-//     std::vector<T> operator*()
-//     {
-//         return *current;
-//     }
-
-//     GroupedIterator<T> &operator++()
-//     {
-//         ++current;
-//         return *this;
-//     }
-
-//     bool operator==(const GroupedIterator<T> &other) const
-//     {
-//         return current == other.current;
-//     }
-
-//     bool operator!=(const GroupedIterator<T> &other) const
-//     {
-//         return current != other.current;
-//     }
-// };
-
-// VectorInt makeCopy(VectorInt &vec, int start, int size)
-// {
-//     VectorInt res;
-//     for (int i = start; i < start + size; i++)
-//     {
-//         res.push_back(vec[i]);
-//     }
-//     return res;
-// }
-
-void printVec(VectorInt &vec)
-{
-    for (int i = 0; i < vec.size(); i++)
-    {
+void printVec(vector<int> &vec) {
+    for (int i = 0; i < vec.size(); i++) {
         cout << vec[i] << " ";
     }
     cout << "\n";
 }
 
-// 0 1 2 3 4 5 6 7
-// 0 0 2 2 4 4 6 6
+template <typename T>
+typename T::iterator binarySearch(T &vec, int value, int searchRange, int pairSize) {
+    int jumpSize = (searchRange / 2 / pairSize * pairSize);
+    typename T::iterator middle = advance(vec.begin(), jumpSize);
 
-// 0 1 2 3 4 5 6 7
-// 0 0 0 0 4 4 4 4
+    if (jumpSize / 2 / pairSize * pairSize >= pairSize) {
+        jumpSize = jumpSize / 2 / pairSize * pairSize;
+    }
+    if (!jumpSize) {
+        jumpSize = pairSize;
+    }
+    while (true) {
+        typename T::iterator nextMiddle = middle;
 
-VectorInt::iterator binarySearch(VectorInt &vec, int value, int pairSize)
-{
-    VectorInt::iterator it = vec.begin() + (vec.size() / 2 / (pairSize / 2));
-    cout << "first: " << *it << "\n";
-    size_t jump = vec.size() / 4;
-
-    while (true)
-    {
-        cout << *it << " < " << value << "\n";
-        if (*it < value)
-        {
-            it = it - jump;
-            if (it <= vec.begin() || !jump)
-            {
-                return vec.begin();
-            }
-        }
-        else
-        {
-            it = it + jump;
-            if (it >= vec.end() || !jump)
-            {
+        if (value > *middle) {
+            nextMiddle = advance(middle, jumpSize);
+            if (nextMiddle == vec.end()) {
                 return vec.end();
             }
+        } else {
+            nextMiddle = advance(middle, -jumpSize);
+            // if (nextMiddle < vec.begin()) {
+            //     return vec.begin();
+            // }
+            if (middle == vec.begin() && value <= *middle) {
+                return vec.begin();
+            }
+            if (jumpSize == pairSize && value > *nextMiddle) {
+                return middle;
+            }
         }
-        jump /= 2;
+
+        middle = nextMiddle;
+        if (jumpSize / 2 / pairSize * pairSize >= pairSize) {
+            jumpSize = jumpSize / 2 / pairSize * pairSize;
+        }
     }
-    cout << "\n";
-    return it;
+    return middle;
 }
 
-VectorInt binaryInsert(VectorInt &vec, int pairSize)
-{
-    VectorInt res;
+template <typename T>
+T binaryInsert(T &chain, T &pend, int pairSize) {
+    T result;
+    T toInsert;
 
-    for (VectorInt::iterator it = vec.begin(); vec.end() - it > 0; it += pairSize)
-    {
-        for (int i = 0; i < pairSize / 2; i++)
-        {
-            res.push_back(*(it + i));
+    for (typename T::iterator it = chain.begin(); it != chain.end();) {
+        for (int i = 0; i < pairSize / 2; i++) {
+            result.push_back(*(it++));
+        }
+        for (int i = 0; i < pairSize / 2; i++) {
+            toInsert.push_back(*(it++));
         }
     }
 
-    cout << "inserting into: ";
-    printVec(res);
-
-    for (VectorInt::iterator it = vec.begin() + pairSize / 2; vec.end() - it > 0; it += pairSize)
-    {
-        cout << "inserting: " << *it << "\n";
-        VectorInt::iterator target = binarySearch(res, *it, pairSize);
-        cout << "target: " << *target << "\n";
-        res.insert(target, it, it + pairSize / 2);
-        cout << "after: ";
-        printVec(res);
+    if (pend.size()) {
+        typename T::iterator targetIterator = binarySearch(result, *pend.begin(), result.size(), pairSize / 2);
+        result.insert(targetIterator, pend.begin(), pend.end());
     }
 
-    return res;
+    typename T::iterator it = advance(toInsert.begin(), pairSize / 2);
+    for (int i = 0; it != toInsert.end(); it = advance(it, pairSize / 2), i += pairSize / 2) {
+        typename T::iterator targetIterator = binarySearch(result, *it, i, pairSize / 2);
+        result.insert(targetIterator, it, advance(it, pairSize / 2));
+    }
+    return result;
 }
 
-VectorInt sort(VectorInt &vec, int pairSize)
-{
-    cout << "Pair size: " << pairSize << "\n";
-    if (pairSize >= vec.size())
-    {
-        return vec;
+template <typename T>
+T sort(T chain, int pairSize) {
+    if (pairSize / 2 >= chain.size()) {
+        return chain;
     }
 
-    VectorInt::iterator it = vec.begin();
-    for (; vec.end() - (it + pairSize + pairSize - 1) > 0; it += pairSize * 2)
-    {
-        VectorInt::iterator next = it + pairSize;
-        if (*it < *next)
-        {
-            cout << *it << "<" << *next << "\n";
-            VectorInt temp(next, next + pairSize);
+    int pendSize = chain.size() % pairSize;
+    typename T::iterator pendStart = advance(chain.end(), -pendSize);
+    T pend(pendStart, chain.end());
+    chain.erase(pendStart, chain.end());
+
+    for (typename T::iterator it = chain.begin(); it != chain.end(); it = advance(it, pairSize)) {
+        typename T::iterator next = advance(it, pairSize / 2);
+        if (*it < *next) {
+            T temp(next, advance(next, pairSize / 2));
             std::copy(it, next, next);
             std::copy(temp.begin(), temp.end(), it);
-            cout << "\n";
         }
     }
 
-    cout << "pend: ";
-    VectorInt pend(it, vec.end());
-    printVec(pend);
-
-    vec.erase(it, vec.end());
-    VectorInt sorted = sort(vec, pairSize * 2);
-
-    cout << "sorted: ";
-    printVec(sorted);
-
-    VectorInt insertSorted = binaryInsert(sorted, pairSize * 2);
-
-    // if (pend.size())
-    // {
-    //     VectorInt::iterator target = binarySearch(insertSorted, *pend.begin());
-    //     cout << "target: " << *target << "\n";
-    //     insertSorted.insert(target, pend.begin(), pend.end());
-    // }
-
-    cout << "\n";
+    T bigSorted = sort(chain, pairSize * 2);
+    T insertSorted = binaryInsert(bigSorted, pend, pairSize);
     return insertSorted;
 }
 
-// [7, 10, 9, 5, 8]
-
-// [(7, 10), (5, 9), 8]
-
-// (9, 10)
-// [((5, 9), (7, 10))]
-
-// [7, 8, 5, 9, 11, 0, 2, 1, 10, 3, 4, 6]
-
-// [(7, 8), (5, 9), (0, 11), (1, 2), (3, 10), (4, 6)]
-
-// [((7, 8), (5, 9)), ((1, 2), (0, 11)), ((4, 6), (3, 10))]
-
-// [(((7, 8), (5, 9)), ((1, 2), (0, 11))), (((4, 6), (3, 10)))]
-
-// [(((7, 8), (5, 9)), ((1, 2), (0, 11)))] | (((4, 6), (3, 10)))
-
-//     1
-// 5 4 3 2
-
-template <typename T>
-void test(std::vector<T> vec)
-{
-    test(vec);
-}
-
-int main(int argc, char **argv)
-{
-    if (argc == 1)
-    {
+int main(int argc, char **argv) {
+    if (argc == 1) {
         cout << "Error: a list of integers is required\n";
         return 1;
     }
 
-    VectorInt vec;
-    for (int i = 1; i < argc; i++)
-    {
+    vector<int> vec;
+    list<int> li;
+    for (int i = 1; i < argc; i++) {
         int n = std::atoi(argv[i]);
         vec.push_back(n);
+        li.push_back(n);
     }
 
-    std::pair<std::pair<int, int>, std::pair<int, int>> pair = {{1, 2}, {3, 4}};
-    cout << *(reinterpret_cast<int *>(&(pair))) << "\n";
+    vector<int> sortedVector = sort(vec, 2);
 
-    // VectorInt sorted = sort(vec, 1);
-    // printVec(sorted);
+    list<int> sortedList = sort(li, 2);
+
+    list<int>::iterator it = li.begin();
+    // it += 1;
+
+    cout << "\nRESULT: ";
+    // printVec(sortedVector);
+    cout << isSorted(sortedVector, 1);
+    // cout << isSorted(sortedList, 1);
 
     return 0;
 }
