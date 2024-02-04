@@ -40,19 +40,18 @@ BitcoinExchange::~BitcoinExchange() {}
 
 // METHODS
 
-std::ifstream openFileOrThrow(std::string &filename)
+void openFileOrThrow(std::ifstream &file, std::string &filename)
 {
-    std::ifstream file(&filename[0]);
+    file.open(&filename[0]);
     if (!file)
     {
         throw std::invalid_argument("Could not open file: " + filename);
     }
-    return file;
 }
 
 void BitcoinExchange::verifyDateComponentOrThrow(std::string &dateComponent, std::string &maxValue)
 {
-    int expectedComponentLength = maxValue.length();
+    size_t expectedComponentLength = maxValue.length();
     int maxValueToNumber = std::atoi(&maxValue[0]);
     if (dateComponent.length() != expectedComponentLength)
     {
@@ -75,7 +74,11 @@ float BitcoinExchange::toFloatOrThrow(std::string &strFloat, float max)
     {
         throw std::invalid_argument("exchange rate: not provided");
     }
-    if (!onlyHas(strFloat, "0123456789.") || strFloat == ".")
+    if (strFloat[0] == '-' && countCharacter(strFloat, '-') == 1)
+    {
+        throw std::invalid_argument("exchange rate: not a positive number");
+    }
+    else if (!onlyHas(strFloat, "0123456789.") || strFloat == ".")
     {
         throw std::invalid_argument("exchange rate: unexpected characters");
     }
@@ -84,7 +87,7 @@ float BitcoinExchange::toFloatOrThrow(std::string &strFloat, float max)
         throw std::invalid_argument("exchange rate: multiple '.'");
     }
     float result = std::strtof(&strFloat[0], NULL);
-    if (max != -1 && result > max)
+    if ((max != -1 && result > max) || result < 0)
     {
         throw std::invalid_argument("exchange rate: must be in range [0-1000]");
     }
@@ -126,7 +129,7 @@ ExchangeToRetrieve BitcoinExchange::parseInputFileLineOrThrow(std::string &line)
     size_t separaterPos = line.find(separater);
     if (separaterPos == std::string::npos)
     {
-        throw std::invalid_argument("invalid or no serparater");
+        throw std::invalid_argument("invalid or no separater");
     }
 
     std::string date = line.substr(0, separaterPos);
@@ -134,7 +137,10 @@ ExchangeToRetrieve BitcoinExchange::parseInputFileLineOrThrow(std::string &line)
 
     std::string rawExchangeRate = line.substr(separaterPos + separater.size(), -1);
     float exchangeRateToNumber = this->toFloatOrThrow(rawExchangeRate, 1000);
-    return {date, exchangeRateToNumber};
+    ExchangeToRetrieve data;
+    data.date = date;
+    data.amount = exchangeRateToNumber;
+    return data;
 }
 
 void BitcoinExchange::printRetrievedValue(std::string &line)
@@ -146,9 +152,9 @@ void BitcoinExchange::printRetrievedValue(std::string &line)
         if (it->first != exchange.date && it != _exchangeRatesPerYear.begin())
         {
             it--;
-            float totalValue = it->second * exchange.amount;
-            std::cout << exchange.date << " => " << exchange.amount << " = " << totalValue << "\n";
         }
+        float totalValue = it->second * exchange.amount;
+        std::cout << exchange.date << " => " << exchange.amount << " = " << totalValue << "\n";
     }
     catch (const std::exception &e)
     {
@@ -159,7 +165,8 @@ void BitcoinExchange::printRetrievedValue(std::string &line)
 
 void BitcoinExchange::printValuesPerYear(std::string filename)
 {
-    std::ifstream file = openFileOrThrow(filename);
+    std::ifstream file;
+    openFileOrThrow(file, filename);
     std::string line;
 
     getline(file, line);
@@ -180,7 +187,8 @@ void BitcoinExchange::printValuesPerYear(std::string filename)
 
 void BitcoinExchange::parseDatabase(std::string filename)
 {
-    std::ifstream file = openFileOrThrow(filename);
+    std::ifstream file;
+    openFileOrThrow(file, filename);
     std::string line;
 
     getline(file, line);
@@ -198,7 +206,7 @@ void BitcoinExchange::parseDatabase(std::string filename)
         size_t separaterPos = line.find_first_of(',');
         if (separaterPos == std::string::npos)
         {
-            throw std::invalid_argument("invalid or no serparater");
+            throw std::invalid_argument("invalid or no separater");
         }
 
         std::string date = line.substr(0, separaterPos);
@@ -208,6 +216,5 @@ void BitcoinExchange::parseDatabase(std::string filename)
         float exchangeRateToNumber = this->toFloatOrThrow(rawExchangeRate);
 
         _exchangeRatesPerYear[date] = exchangeRateToNumber;
-        // std::cout << date << " " << exchangeRateToNumber << "\n";
     }
 }

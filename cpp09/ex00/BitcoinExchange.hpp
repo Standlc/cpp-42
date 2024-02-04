@@ -29,11 +29,12 @@ public:
     BitcoinExchange &operator=(const BitcoinExchange &other);
     ~BitcoinExchange();
 
+    void parseDatabase(std::string filename);
+    ExchangeToRetrieve parseInputFileLineOrThrow(std::string &line);
+
     void verifyDateComponentOrThrow(std::string &dateComponent, std::string &maxValue);
     float toFloatOrThrow(std::string &strFloat, float max = -1);
     void verifyDateOrThrow(std::string &date);
-    void parseDatabase(std::string filename);
-    ExchangeToRetrieve parseInputFileLineOrThrow(std::string &line);
     void printRetrievedValue(std::string &line);
     void printValuesPerYear(std::string filename);
 };

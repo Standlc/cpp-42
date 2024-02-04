@@ -6,7 +6,7 @@ int main(int argc, char **argv)
 {
     if (argc != 2)
     {
-        std::cerr << "\e[0;31mError: an input file is required\n";
+        std::cerr << "\e[0;31mError: one input file is required\n";
         return 1;
     }
 

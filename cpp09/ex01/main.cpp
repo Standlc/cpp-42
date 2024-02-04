@@ -4,7 +4,7 @@ int main(int argc, char **argv)
 {
     if (argc != 2)
     {
-        std::cout << "Errro: an operation is required as argument\n";
+        std::cout << "Error: am operation is required as a single argument\n";
         return 1;
     }
 
