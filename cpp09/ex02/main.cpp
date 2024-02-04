@@ -1,6 +1,8 @@
 #include <sys/time.h>
+
 #include <climits>
 #include <sstream>
+
 #include "PmergeMe.hpp"
 
 long getNow() {
@@ -34,12 +36,22 @@ int toUnsignedIntOrThrow(std::string str) {
     return n;
 }
 
-void fillContainers(int argc, char **argv, vector<int> &vec, list<int> &li) {
+template <typename T>
+void fillContainerOrThrow(int argc, char **argv, T &container) {
     for (int i = 1; i < argc; i++) {
         int n = toUnsignedIntOrThrow(std::string(argv[i]));
-        vec.push_back(n);
-        li.push_back(n);
+        container.push_back(n);
     }
+}
+
+template <typename T>
+long testSort(int argc, char **argv, T &container) {
+    long startSort = getNow();
+    fillContainerOrThrow(argc, argv, container);
+    T sortedContainer = mergeInsert(container, 2);
+    container = sortedContainer;
+    long timeSort = getNow() - startSort;
+    return timeSort;
 }
 
 int main(int argc, char **argv) {
@@ -48,42 +60,35 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    vector<int> vec;
-    list<int> li;
+    vector<int> unsortedVector;
+    fillContainerOrThrow(argc, argv, unsortedVector);
 
+    vector<int> vec;
+    long timeSortVector;
     try {
-        fillContainers(argc, argv, vec, li);
+        timeSortVector = testSort(argc, argv, vec);
+    } catch (const std::exception &e) {
+        std::cout << "Error: " << e.what() << '\n';
+        return 1;
+    }
+
+    long timeSortList;
+    list<int> li;
+    try {
+        timeSortList = testSort(argc, argv, li);
     } catch (const std::exception &e) {
         std::cout << "Error: " << e.what() << '\n';
         return 1;
     }
 
     cout << "Before:\t";
-    printNumbers(vec);
-
-    long startSortVector = getNow();
-    vector<int> sortedVector = mergeInsert(vec, 2);
-    long timeSortVector = getNow() - startSortVector;
-
-    long startSortList = getNow();
-    list<int> sortedList = mergeInsert(li, 2);
-    long timeSortList = getNow() - startSortList;
-
+    printNumbers(unsortedVector);
     cout << "After:\t";
-    printNumbers(sortedVector);
-
+    printNumbers(vec);
     cout << "Time to process a range of " << vec.size() << " elements with std::vector : " << timeSortVector << "ms\n";
     cout << "Time to process a range of " << li.size() << " elements with std::list : " << timeSortList << "ms\n";
 
-    // debugPrintNumbers(sortedVector, 1);
-    // debugPrintNumbers(sortedList, 1);
+    debugPrintNumbers(vec, 1);
+    debugPrintNumbers(li, 1);
     return 0;
 }
-
-// typename T::iterator it = toInsert.begin();
-// for (int i = 0; it != toInsert.end(); it = advance(it, pairSize / 2), i += pairSize / 2) {
-//     typename T::iterator target = binarySearch(result.begin(), result.end(), *it, pairSize / 2);
-//     // cout << "inserting: " << *it << "\n";
-//     // cout << "target: " << *target << "\n";
-//     result.insert(target, it, advance(it, pairSize / 2));
-// }
